@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 
 use App\Http\Controllers\Controller;
@@ -50,7 +51,8 @@ class PostController extends Controller
          $request->validate([
              'title' => 'required|max:80',
              'content' => 'required',
-             'category_id' => 'nullable|exist:categories,id'
+             'category_id' => 'nullable|exist:categories,id',
+             'image' => 'nullable|image'
 
 
          ]);
@@ -85,6 +87,16 @@ class PostController extends Controller
         }
 
        $new_post->slug = $slug;
+       if(array_key_exists('image',$data)){
+
+        //  salvo la mia immagine e recupero path
+
+        $coverVar = Storage::put('covers', $data['image']);
+
+        // salviamo nella tabella immagine e percorso
+
+        $data['cover'] = $coverVar;
+       }
 
        $new_post ->fill($data);
 

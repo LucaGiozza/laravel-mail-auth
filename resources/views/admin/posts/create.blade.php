@@ -24,9 +24,9 @@
 @endif 
 
 
+<!-- inserisco  enctype="multipart/form-data" per le immagini -->
 
-
-<form action="{{route('admin.posts.store')}}" method="post">
+<form action="{{route('admin.posts.store')}}" method="post" enctype="multipart/form-data">
     @csrf
   <div class="mb-3">
       <label for="titolo" class="form-label">Titolo</label>
@@ -52,6 +52,19 @@
       </select>
       
       
+  </div>
+
+<!-- div per le immagini -->
+  <div  class="mb-3">
+    <label for="img" class="form-label">Immagine</label>
+    <input type="file" name="image" class="form-control-file @error('image') is-invalid @enderror">
+    @error('image')
+        <div class="alert alert-danger">{{$message}}</div>
+
+    @enderror
+
+
+
   </div>
   <div class="mb-3">
      <label for="desc" class="form-label">descrizione</label>
