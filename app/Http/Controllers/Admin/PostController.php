@@ -169,12 +169,15 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|max:80',
             'content' => 'required',
-            'category_id' => 'nullable|exist:categories,id'
+            'category_id' => 'nullable|exist:categories,id',
+            'image' => 'nullable|image'
 
 
         ]);
 
         $data = $request->all();
+
+
         if($data['title'] != $post->title){
             $slug = Str::slug($data['title'], '-'); //titolo di esempio
 
@@ -205,6 +208,17 @@ class PostController extends Controller
             $data['slug'] = $slug;
         }
 
+        if(array_key_exists('image',$data)){
+
+            //  salvo la mia immagine e recupero path
+    
+            $coverVar = Storage::put('covers', $data['image']);
+    
+            // salviamo nella tabella immagine e percorso
+    
+            $data['cover'] = $coverVar;
+           }
+
 
         
         $post->update($data);
@@ -221,7 +235,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        Storage::delete($post->cover);
         $post->delete();
+        
         $post->tags()->detach();
         return redirect()->route('admin.posts.index')->with('destroyed','Hai eliminato con successo l\'elemento ' . $post->id);
       
