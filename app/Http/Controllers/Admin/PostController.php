@@ -213,6 +213,8 @@ class PostController extends Controller
             //  salvo la mia immagine e recupero path
     
             $coverVar = Storage::put('covers', $data['image']);
+
+            Storage::delete($post->cover);
     
             // salviamo nella tabella immagine e percorso
     
